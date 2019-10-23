@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class ActiveMQExample {
 
-    private static final Logger logger = LogManager.getLogger(NetMoBoce.class);
+    private static final Logger logger = LogManager.getLogger(ActiveMQExample.class);
 
     @Value("${spring.activemq.broker-url}")
     private String brokerUrl;
