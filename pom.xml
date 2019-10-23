@@ -8,8 +8,8 @@
 		<version>2.1.8.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>xieshaohu</groupId>
-	<artifactId>example</artifactId>
+	<groupId>com.example</groupId>
+	<artifactId>spring-activemq-example</artifactId>
 	<version>0.0.1.RELEASE</version>
 	<name>spring-activemq-example</name>
 	<description>Demo project for Spring Boot</description>
