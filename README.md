@@ -1,11 +1,12 @@
 # 示例项目清单
 * spring-activemq-example - activemq示例工程
 * spring-mail-example - 邮件客户端工程，无web页面，无监听端口，本地直接启动
+* spring-mybatis-example - mybatis示例工程，使用log4j2、druid连接缓冲池，使用`SqlSession`直接调用，不写POJO 、Mapper接口
 
 # 示例项目部署方法
 * 主目录创建config、logs两个文件夹
 * 主目录放置start.sh和stop.sh两个脚本文件，并添加可执行权限
-* config目录下放置application.properties和log4j2.xml文件
+* config目录下放置application.properties或application.yml和log4j2.xml文件
 * 修改log4j2.xml文件，增加日志文件输出
 
 # 示例项目启动脚本start.sh
