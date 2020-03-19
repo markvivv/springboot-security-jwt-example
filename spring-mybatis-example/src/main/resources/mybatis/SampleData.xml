@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SampleData">
+    <select id="queryAll" resultType="map">
+        select * from table_name
+    </select>
+    <select id="queryBySn" resultType="map" parameterType="string">
+        SELECT *
+        FROM table_name t
+        WHERE t.sn = #{sn}
+    </select>
+</mapper>

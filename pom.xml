@@ -9,5 +9,6 @@
     <modules>
         <module>spring-activemq-example</module>
         <module>spring-mail-example</module>
+        <module>spring-mybatis-example</module>
     </modules>
 </project>
