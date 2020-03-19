@@ -1,4 +1,4 @@
-package name.xieshaohu.example.spring.mail;
+package examples.spring.mail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

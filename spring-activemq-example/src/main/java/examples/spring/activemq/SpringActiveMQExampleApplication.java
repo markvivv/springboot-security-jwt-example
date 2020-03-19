@@ -1,4 +1,4 @@
-package name.xieshaohu.example.spring.activemq;
+package examples.spring.activemq;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

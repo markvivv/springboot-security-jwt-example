@@ -1,4 +1,4 @@
-package name.xieshaohu.example.spring.activemq;
+package examples.spring.activemq;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
