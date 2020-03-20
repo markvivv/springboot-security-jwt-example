@@ -8,7 +8,7 @@
 		<version>2.2.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>name.xieshaohu.example</groupId>
+	<groupId>examples</groupId>
 	<artifactId>spring-mybatis-example</artifactId>
 	<version>0.0.1.SNAPSHOT</version>
 	<name>spring-mybatis-example</name>
