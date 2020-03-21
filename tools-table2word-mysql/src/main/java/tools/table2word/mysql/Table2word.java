@@ -4,6 +4,9 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +16,7 @@ import javax.annotation.PostConstruct;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -42,25 +46,6 @@ public class Table2word {
         // -- OR --
         // open an existing empty document with styles already defined
         //XWPFDocument doc = new XWPFDocument(new FileInputStream("base_document.docx"));
-        // 设置字段表头
-        XWPFParagraph tableHeaderPara = doc.createParagraph();
-        tableHeaderPara.setBorderLeft(Borders.SINGLE);
-        tableHeaderPara.setBorderTop(Borders.SINGLE);
-        tableHeaderPara.setBorderRight(Borders.SINGLE);
-        tableHeaderPara.setBorderBottom(Borders.SINGLE);
-        tableHeaderPara.setBorderBetween(Borders.SINGLE);
-        tableHeaderPara.setAlignment(ParagraphAlignment.CENTER);
-        tableHeaderPara.setVerticalAlignment(TextAlignment.CENTER);
-
-        // 设置字段表body
-        XWPFParagraph tablePara = doc.createParagraph();
-        tablePara.setBorderLeft(Borders.SINGLE);
-        tablePara.setBorderTop(Borders.SINGLE);
-        tablePara.setBorderRight(Borders.SINGLE);
-        tablePara.setBorderBottom(Borders.SINGLE);
-        tablePara.setBorderBetween(Borders.SINGLE);
-        tablePara.setAlignment(ParagraphAlignment.LEFT);
-        tablePara.setVerticalAlignment(TextAlignment.CENTER);
 
         // 按照表循环读取表结构
         try {
@@ -78,29 +63,60 @@ public class Table2word {
                         .append("(").append(tableName).append(")").toString()
                         );
 
-                XWPFTable table = doc.createTable();
+                try {
+                    // 取表的所有字段说明
+                    List<Map<String, Object>> tableColumns = jdbcTemplate.queryForList(
+                            new StringBuilder()
+                                    .append("SHOW FULL FIELDS FROM ")
+                                    .append(databaseName).append(".").append(tableName).toString());
+                    // 创建一个table的段落
+                    XWPFParagraph tablePara = doc.createParagraph();
 
-                // 设置表格头部信息
-                XWPFTableRow headerRow = table.createRow();
-                for (String headerColumn : headerValArray)  {
-                    XWPFTableCell headerCell = headerRow.addNewTableCell();
-                    headerCell.setParagraph(tableHeaderPara);
-                    headerCell.setColor("DEDEDE");
-                    headerCell.setText(headerColumn);
-                }
+                    // 因为有表头，所以table的行数等于数据行数+1
+                    XWPFTable table = doc.createTable(tableColumns.size() + 1, 7);
 
-                // 取表的所有字段说明
-                List<Map<String, Object>> tableColumns = jdbcTemplate.queryForList(
-                        new StringBuilder()
-                                .append("SHOW FULL FIELDS FROM ")
-                                .append(databaseName).append(".").append(tableName).toString());
-                for (Map<String, Object> rowColumns : tableColumns) {
-                    XWPFTableRow columnRow = table.createRow();
-                    for (String column : headerKeyArray)  {
-                        XWPFTableCell headerCell = headerRow.addNewTableCell();
-                        headerCell.setParagraph(tablePara);
-                        headerCell.setText(MapUtils.getString(rowColumns, column, ""));
+                    //表格属性
+                    CTTblPr tablePr = table.getCTTbl().addNewTblPr();
+                    //表格宽度
+                    CTTblWidth width = tablePr.addNewTblW();
+                    width.setW(BigInteger.valueOf(5000));
+                    //设置表格宽度为非自动
+                    width.setType(STTblWidth.DXA);
+
+                    // 表头行
+                    XWPFTableRow headRow = table.getRow(0);
+                    for (int hvaIdx = 0, hvaSize = headerValArray.length; hvaIdx < hvaSize; hvaIdx++)  {
+                        XWPFTableCell headCell = headRow.getCell(hvaIdx);
+                        XWPFParagraph p = headCell.addParagraph();
+                        XWPFRun headRun0 = p.createRun();
+                        headRun0.setText(headerValArray[hvaIdx]);
+                        headRun0.setFontSize(12);
+                        headRun0.setBold(true);//是否粗体
+                        headCell.setColor("DEDEDE");
+                        //垂直居中
+                        p.setVerticalAlignment(TextAlignment.CENTER);
+                        //水平居中
+                        p.setAlignment(ParagraphAlignment.CENTER);
                     }
+
+                    // 表主体
+                    int tableRowIdx = 1;
+                    for (Map<String, Object> rowColumns : tableColumns) {
+                        XWPFTableRow columnRow = table.getRow(tableRowIdx++);
+                        for (int colIdx = 0, colSize = headerKeyArray.length; colIdx < colSize; colIdx++) {
+                            XWPFTableCell dataCell = columnRow.getCell(colIdx);
+                            XWPFParagraph p =  dataCell.addParagraph();
+                            XWPFRun pRun = p.createRun();
+                            pRun.setText(MapUtils.getString(rowColumns, headerKeyArray[colIdx], ""));
+
+                            //垂直居中
+                            dataCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                            //水平居中
+                            p.setAlignment(ParagraphAlignment.CENTER);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("表结构信息读取出错！", e);
                 }
             }
 
