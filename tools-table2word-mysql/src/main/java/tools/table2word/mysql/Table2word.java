@@ -42,13 +42,8 @@ public class Table2word {
                 "SHOW TABLE STATUS from " + databaseName);
 
         // Create a new document from scratch
-        XWPFDocument doc = new XWPFDocument();
-        // -- OR --
-        // open an existing empty document with styles already defined
-        //XWPFDocument doc = new XWPFDocument(new FileInputStream("base_document.docx"));
-
-        // 按照表循环读取表结构
-        try {
+        try (XWPFDocument doc = new XWPFDocument()) {
+            // 按照表循环读取表结构
             for (Map<String, Object> tableInfo : allTableNames) {
 
                 // 设置标题
@@ -69,18 +64,16 @@ public class Table2word {
                             new StringBuilder()
                                     .append("SHOW FULL FIELDS FROM ")
                                     .append(databaseName).append(".").append(tableName).toString());
-                    // 创建一个table的段落
-                    XWPFParagraph tablePara = doc.createParagraph();
 
                     // 因为有表头，所以table的行数等于数据行数+1
                     XWPFTable table = doc.createTable(tableColumns.size() + 1, 7);
 
-                    //表格属性
+                    // 表格属性
                     CTTblPr tablePr = table.getCTTbl().addNewTblPr();
-                    //表格宽度
+                    // 表格宽度
                     CTTblWidth width = tablePr.addNewTblW();
-                    width.setW(BigInteger.valueOf(5000));
-                    //设置表格宽度为非自动
+                    width.setW(BigInteger.valueOf(8200));
+                    // 设置表格宽度为非自动
                     width.setType(STTblWidth.DXA);
 
                     // 表头行
@@ -93,9 +86,9 @@ public class Table2word {
                         headRun0.setFontSize(12);
                         headRun0.setBold(true);//是否粗体
                         headCell.setColor("DEDEDE");
-                        //垂直居中
+                        // 垂直居中
                         p.setVerticalAlignment(TextAlignment.CENTER);
-                        //水平居中
+                        // 水平居中
                         p.setAlignment(ParagraphAlignment.CENTER);
                     }
 
@@ -109,10 +102,15 @@ public class Table2word {
                             XWPFRun pRun = p.createRun();
                             pRun.setText(MapUtils.getString(rowColumns, headerKeyArray[colIdx], ""));
 
-                            //垂直居中
+                            // 垂直居中
                             dataCell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
-                            //水平居中
-                            p.setAlignment(ParagraphAlignment.CENTER);
+                            if (colIdx == colSize - 1) {
+                                // 最后一列左对齐
+                                p.setAlignment(ParagraphAlignment.LEFT);
+                            } else {
+                                // 水平居中
+                                p.setAlignment(ParagraphAlignment.CENTER);
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -127,10 +125,6 @@ public class Table2word {
             }
         } catch (IOException e) {
             logger.error("初始化文件出错！", e);
-        } finally {
-            try {
-                doc.close();
-            } catch (Exception e) {}
         }
 
     }
