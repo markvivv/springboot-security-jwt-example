@@ -2,6 +2,8 @@
 * spring-activemq-example - activemq示例工程
 * spring-mail-example - 邮件客户端工程，无web页面，无监听端口，本地直接启动
 * spring-mybatis-example - mybatis示例工程，使用log4j2、druid连接缓冲池，使用`SqlSession`直接调用，不写POJO 、Mapper接口
+* tools-table2word-mysql - 生成连接的mysql数据库中所有表的表结构，并通过POI的API写入到word
+
 
 # 示例项目部署方法
 * 主目录创建config、logs两个文件夹

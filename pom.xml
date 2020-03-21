@@ -1,14 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>name.xieshaohu.example</groupId>
-    <artifactId>parent</artifactId>
-    <version>0.0.1.SNAPSHOT</version>
-    <name>parent</name>
-    <description>parent</description>
+
+    <groupId>xieshaohu</groupId>
+    <artifactId>examples</artifactId>
+    <version>1.0.0.RELEASE</version>
+    <description>示例项目和工具类</description>
     <packaging>pom</packaging>
+
     <modules>
         <module>spring-activemq-example</module>
         <module>spring-mail-example</module>
         <module>spring-mybatis-example</module>
+        <module>tools-table2word-mysql</module>
     </modules>
 </project>
