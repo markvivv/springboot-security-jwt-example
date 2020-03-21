@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    druid:
+      initial-size: 3
+      max-active: 5
+      min-idle: 3
+      validation-query: select 1
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      filters: stat,log4j2
+      # StatFilter
+      filter.stat.enabled: true
+      filter.stat.db-type: mysql
+      filter.stat.log-slow-sql: true
+      filter.stat.slow-sql-millis: 2000
+      # Log4j2Filter
+      filter.log4j2.enabled: true
+      filter.log4j2.statement-create-after-log-enabled: false
+      filter.log4j2.statement-close-after-log-enabled: false
+      filter.log4j2.result-set-open-after-log-enabled: false
+      filter.log4j2.result-set-close-after-log-enabled: false

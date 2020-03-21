@@ -1,0 +1,41 @@
+spring:
+  profiles:
+    active: dev,druid,mybatis
+
+  jackson:
+    mapper:
+      default-view-inclusion: true
+    serialization:
+      indent-output:  true
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-ignored-properties: false
+      fail-on-unknown-properties: false
+      accept-single-value-as-array: true
+    default-property-inclusion: non_empty
+
+  servlet:
+      multipart:
+        max-file-size: 10MB
+        max-request-size: 100MB
+  output:
+    ansi:
+      #DETECT：会检查终端是否支持ANSI，是的话就采用彩色输出（推荐项）
+      enabled: detect
+  session:
+    store-type: none
+
+logging:
+  config: classpath:log4j2.xml
+
+server:
+  port: 8080
+  maxHttpHeaderSize: 10485760
+
+jwt:
+  secretkey: gqIyTAfxJuRPU5uW3kLcupebDCpFiq1MAybc
+  # 24 hours
+  validtiy:
+    ms: 86400000
+
+

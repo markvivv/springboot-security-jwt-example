@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LoginMapper">
+    <select id="loadUserByUsername" resultType="map" parameterType="string">
+        select * from user_table where user_name = #{user_name}
+    </select>
+</mapper>
