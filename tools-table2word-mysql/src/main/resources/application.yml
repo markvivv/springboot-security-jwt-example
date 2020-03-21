@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: druid
+
+  datasource:
+    url: jdbc:mysql://0.0.0.0:3306/ppx?characterEncoding=utf8&useConfigs=maxPerformance&rewriteBatchedStatements=true&useSSL=false&serverTimezone=GMT%2B8
+    username: username
+    password: password
+
+database:
+  name: database
