@@ -20,6 +20,12 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * &#x8bfb;&#x53d6;Mysql&#x6570;&#x636e;&#x5e93;&#x914d;&#x7f6e;&#x4fe1;&#x606f; &#xff0c;&#x751f;&#x6210;&#x8868;&#x3001;&#x89c6;&#x56fe;&#x7ed3;&#x6784;&#x4fe1;&#x606f;
+ *
+ * @see <a href="http://svn.apache.org/repos/asf/poi/trunk/src/examples/src/org/apache/poi/xwpf/usermodel/examples/">poi-examples</a>
+ * @see <a href="https://www.cnblogs.com/linhuaming/p/9849052.html">POI&#x751f;&#x6210;word&#x6587;&#x6863;&#x7b80;&#x5355;&#x7248;&#xff08;&#x5305;&#x62ec;&#x6587;&#x5b57;&#x3001;&#x8868;&#x683c;&#x3001;&#x56fe;&#x7247;&#x3001;&#x5b57;&#x4f53;&#x6837;&#x5f0f;&#x8bbe;&#x7f6e;&#x7b49;&#xff09;</a>
+ */
 @Component
 public class Table2word {
 
