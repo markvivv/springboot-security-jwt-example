@@ -53,17 +53,15 @@ public class Table2word {
 
                 // 拼接标题名称
                 String tableName = MapUtils.getString(tableInfo, "name", "");
-                tablenameTitle.setText(new StringBuilder()
-                        .append(MapUtils.getString(tableInfo,  "comment", ""))
-                        .append("(").append(tableName).append(")").toString()
+                tablenameTitle.setText(MapUtils.getString(tableInfo, "comment", "") +
+                                "(" + tableName + ")"
                         );
 
                 try {
                     // 取表的所有字段说明
                     List<Map<String, Object>> tableColumns = jdbcTemplate.queryForList(
-                            new StringBuilder()
-                                    .append("SHOW FULL FIELDS FROM ")
-                                    .append(databaseName).append(".").append(tableName).toString());
+                            "SHOW FULL FIELDS FROM " +
+                                    databaseName + "." + tableName);
 
                     // 因为有表头，所以table的行数等于数据行数+1
                     XWPFTable table = doc.createTable(tableColumns.size() + 1, 7);
@@ -119,8 +117,7 @@ public class Table2word {
             }
 
             // write the file
-            try (OutputStream out = new FileOutputStream(new StringBuilder()
-                    .append(databaseName).append(".docx").toString())) {
+            try (OutputStream out = new FileOutputStream(databaseName + ".docx")) {
                 doc.write(out);
             }
         } catch (IOException e) {
