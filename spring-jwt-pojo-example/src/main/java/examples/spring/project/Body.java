@@ -13,10 +13,10 @@ public class Body {
     private String msg = "";
 
     @JsonProperty("page_num")
-    private long pageNum;
-    private long total;
+    private Long pageNum;
+    private Long total;
     @JsonProperty("page_size")
-    private long pageSize;
+    private Long pageSize;
 
     private Object data;
 
@@ -28,15 +28,15 @@ public class Body {
         return msg;
     }
 
-    public long getPageNum() {
+    public Long getPageNum() {
         return pageNum;
     }
 
-    public long getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public long getPageSize() {
+    public Long getPageSize() {
         return pageSize;
     }
 
@@ -57,9 +57,7 @@ public class Body {
     public Body ok(String msg, Object data) {
         this.code = 200;
         this.msg = msg;
-        var map = new HashMap<String, Object>();
-        map.put("data", data);
-        this.data = map;
+        this.data = data;
         return this;
     }
 
@@ -74,9 +72,9 @@ public class Body {
         this.code = 200;
         this.msg = msg;
         this.data = pageInfo.getList();
-        this.pageNum = pageInfo.getPageNum();
-        this.total = pageInfo.getTotal();
-        this.pageSize = pageInfo.getPageSize();
+        this.pageNum = Long.valueOf(pageInfo.getPageNum());
+        this.total = Long.valueOf(pageInfo.getTotal());
+        this.pageSize = Long.valueOf(pageInfo.getPageSize());
         return this;
     }
 

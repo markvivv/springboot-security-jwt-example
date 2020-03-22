@@ -12,7 +12,7 @@ spring:
       fail-on-ignored-properties: false
       fail-on-unknown-properties: false
       accept-single-value-as-array: true
-    default-property-inclusion: non_empty
+    default-property-inclusion: NON_NULL
 
   servlet:
       multipart:
