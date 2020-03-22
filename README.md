@@ -7,6 +7,7 @@
   - 支持Pojo传参和Validator。
   - 使用统一返回的Body对象，支持返回Pojo对象或者Map封装的数据集合。
   - mybatis文件放置在源代码目录，按照模块打包controller、pojo、mybatis mapper文件。
+  - 使用IDEA提供的HTTP Request功能进行接口测试，测试脚本放在test目录。
 * tools-table2word-mysql - 生成指定mysql数据库中所有表、视图的结构信息，并通过Apache POI的API以表格的形式写入到Word文件
 
 # 示例项目部署方法
