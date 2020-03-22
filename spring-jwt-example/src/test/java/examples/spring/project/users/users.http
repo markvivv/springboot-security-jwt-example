@@ -3,8 +3,20 @@ Content-Type: application/x-www-form-urlencoded
 
 user_name=admin&password=123456
 
+> {% client.global.set("auth_token", response.body.data.token); %}
+
 ###
 GET http://localhost:8080/current_user
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNTg0ODgwNTQ2LCJleHAiOjE1ODQ5NjY5NDZ9.FAvET3yiqhEl48JK_zMXu5QJNTMVjStyu6-qb0Ws-og
+Authorization: Bearer {{auth_token}}
+
+###
+POST http://localhost:8080/users/add_user
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+{
+"user_name": "test",
+"nick_name": "测试账号"
+}
+
 ###

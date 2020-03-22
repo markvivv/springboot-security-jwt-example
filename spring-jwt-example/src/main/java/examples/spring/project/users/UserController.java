@@ -14,13 +14,14 @@ import javax.validation.Valid;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = "/users")
 public class UserController {
 
     private Logger logger = LogManager.getLogger(getClass());
 
     @PostMapping(value="/add_user")
     public ResponseEntity addUser(@Valid @RequestBody UserPojo userPojo) {
+        logger.debug("添加用户信息: {}", userPojo);
         return ok(Body.build().ok("添加用户成功。", userPojo));
     }
 
