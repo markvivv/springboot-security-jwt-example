@@ -33,7 +33,7 @@ server:
   maxHttpHeaderSize: 10485760
 
 jwt:
-  secretkey: gqIyTAfxJuRPU5uW3kLcupebDCpFiq1MAybc
+  secretkey: mV0JdNgw4tNtQvvEwapWZWRbsvS5b4r7g46C
   # 24 hours
   validtiy:
     ms: 86400000

@@ -1,5 +1,5 @@
 mybatis:
-  mapper-locations: classpath:mybatis/*.xml
+  mapper-locations: classpath:**/mapper/*.xml
 
 pagehelper:
   helperDialect: mysql

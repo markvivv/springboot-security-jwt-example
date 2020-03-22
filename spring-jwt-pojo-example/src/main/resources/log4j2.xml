@@ -19,6 +19,9 @@
     </Appenders>
     <Loggers>
         <Logger name="examples.spring" level="DEBUG"/>
+        <logger name="org.mybatis" level="debug" />
+        <logger name="druid.sql" level="debug" />
+        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="debug" />
         <Root level="INFO">
             <AppenderRef ref="Console" />
             <!--<AppenderRef ref="RollingRandomAccessFile" />-->
