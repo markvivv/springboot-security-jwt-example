@@ -3,14 +3,13 @@ package examples.spring.project;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.pagehelper.PageInfo;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
 public class Body {
 
-    private int code = 200;
-    private String msg = "";
+    private int status = 200;
+    private String message = "";
 
     @JsonProperty("page_num")
     private Long pageNum;
@@ -20,12 +19,12 @@ public class Body {
 
     private Object data;
 
-    public int getCode() {
-        return code;
+    public int getStatus() {
+        return status;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
     public Long getPageNum() {
@@ -48,29 +47,29 @@ public class Body {
         return new Body();
     }
 
-    public Body ok(String msg) {
-        this.code = 200;
-        this.msg = msg;
+    public Body ok(String message) {
+        this.status = 200;
+        this.message = message;
         return this;
     }
 
-    public Body ok(String msg, Object data) {
-        this.code = 200;
-        this.msg = msg;
+    public Body ok(String message, Object data) {
+        this.status = 200;
+        this.message = message;
         this.data = data;
         return this;
     }
 
     public Body ok(String msg, Map<String, Object> data) {
-        this.code = 200;
-        this.msg = msg;
+        this.status = 200;
+        this.message = msg;
         this.data = data;
         return this;
     }
 
     public Body ok(String msg, PageInfo pageInfo) {
-        this.code = 200;
-        this.msg = msg;
+        this.status = 200;
+        this.message = msg;
         this.data = pageInfo.getList();
         this.pageNum = Long.valueOf(pageInfo.getPageNum());
         this.total = Long.valueOf(pageInfo.getTotal());
@@ -79,27 +78,27 @@ public class Body {
     }
 
     public Body fail(String msg) {
-        this.code = 400;
-        this.msg = msg;
+        this.status = 400;
+        this.message = msg;
         return this;
     }
 
     public Body fail(String msg, Map<String, Object> data) {
-        this.code = 400;
-        this.msg = msg;
+        this.status = 400;
+        this.message = msg;
         this.data = data;
         return this;
     }
 
     public Body internalServerError(String msg) {
-        this.code = 500;
-        this.msg = msg;
+        this.status = 500;
+        this.message = msg;
         return this;
     }
 
     public Body internalServerError(String msg, Map<String, Object> data) {
-        this.code = 500;
-        this.msg = msg;
+        this.status = 500;
+        this.message = msg;
         this.data = data;
         return this;
     }
@@ -107,8 +106,8 @@ public class Body {
     @Override
     public String toString() {
         return new StringJoiner(", ", Body.class.getSimpleName() + "[", "]")
-                .add("code=" + code)
-                .add("msg='" + msg + "'")
+                .add("status=" + status)
+                .add("message='" + message + "'")
                 .add("data=" + data)
                 .toString();
     }
