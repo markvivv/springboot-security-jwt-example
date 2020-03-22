@@ -28,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             // TODO 任意接口每次请求都访问数据库，可以增加jcache
             Map<String, Object> userinfoMap = sqlSession.selectOne("Login.loadUserByUsername", username);
             User user = new User(username, MapUtils.getString(userinfoMap, "nick_name"),
-                    MapUtils.getString(userinfoMap, "bcrypt_login_passwd"),
+                    MapUtils.getString(userinfoMap, "bcrypt_passwd"),
                     true, true, true, true);
             logger.info("登录用户信息：{}", user);
             return user;
@@ -42,18 +42,18 @@ public class JwtUserDetailsService implements UserDetailsService {
     public class User implements UserDetails {
 
         private String username;
-        private String custname;
+        private String nickname;
         private String password;
         private boolean accountNonExpired;
         private boolean accountNonLocked;
         private boolean credentialsNonExpired;
         private boolean enabled;
 
-        public User(String username, String custname, String password,
+        public User(String username, String nickname, String password,
                     boolean accountNonExpired, boolean accountNonLocked,
                     boolean credentialsNonExpired, boolean enabled) {
             this.username = username;
-            this.custname = custname;
+            this.nickname = nickname;
             this.password = password;
             this.accountNonExpired = accountNonExpired;
             this.accountNonLocked = accountNonLocked;
@@ -61,8 +61,8 @@ public class JwtUserDetailsService implements UserDetailsService {
             this.enabled = enabled;
         }
 
-        public String getCustname() {
-            return custname;
+        public String getNickname() {
+            return nickname;
         }
 
         @Override
