@@ -5,14 +5,16 @@ spring:
   jackson:
     mapper:
       default-view-inclusion: true
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL
     serialization:
       indent-output:  true
       write-dates-as-timestamps: false
+      fail-on-empty-beans: false
     deserialization:
       fail-on-ignored-properties: false
       fail-on-unknown-properties: false
       accept-single-value-as-array: true
-    default-property-inclusion: NON_NULL
 
   servlet:
       multipart:
