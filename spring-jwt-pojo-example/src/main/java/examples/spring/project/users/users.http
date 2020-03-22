@@ -1,0 +1,10 @@
+POST http://localhost:8080/authenticate
+Content-Type: application/x-www-form-urlencoded
+
+user_name=admin&password=123456
+
+###
+GET http://localhost:8080/current_user
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNTg0ODgwNTQ2LCJleHAiOjE1ODQ5NjY5NDZ9.FAvET3yiqhEl48JK_zMXu5QJNTMVjStyu6-qb0Ws-og
+###
