@@ -11,6 +11,7 @@
         <module>spring-activemq-example</module>
         <module>spring-mail-example</module>
         <module>spring-mybatis-example</module>
+        <module>spring-jwt-example</module>
         <module>tools-table2word-mysql</module>
     </modules>
 </project>

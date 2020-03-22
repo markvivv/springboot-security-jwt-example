@@ -2,6 +2,11 @@
 * spring-activemq-example - activemq示例工程
 * spring-mail-example - 邮件客户端工程，无web页面，无监听端口，本地直接启动
 * spring-mybatis-example - mybatis示例工程，使用log4j2、druid连接缓冲池，使用`SqlSession`直接调用，不写POJO 、Mapper接口
+* sprinig-jwt-example
+  - JWT和Spring Security结合进行授权验证。
+  - 支持Pojo传参和Validator。
+  - 使用统一返回的Body对象，支持返回Pojo对象或者Map封装的数据集合。
+  - mybatis文件放置在源代码目录，按照模块打包controller、pojo、mybatis mapper文件。
 * tools-table2word-mysql - 生成指定mysql数据库中所有表、视图的结构信息，并通过Apache POI的API以表格的形式写入到Word文件
 
 # 示例项目部署方法

@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>examples</groupId>
-    <artifactId>spring-jwt-pojo-example</artifactId>
+    <artifactId>spring-jwt-example</artifactId>
     <version>0.0.1.SNAPSHOT</version>
-    <name>spring-jwt-pojo-example</name>
+    <name>spring-jwt-example</name>
     <description>完整的SpringBoot Web项目工程示例</description>
 
     <properties>
