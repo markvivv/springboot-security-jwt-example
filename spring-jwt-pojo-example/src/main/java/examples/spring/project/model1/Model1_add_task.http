@@ -1,6 +1,0 @@
-POST http://localhost:8080/model1/add_task
-Content-Type: application/json
-
-{}
-
-###

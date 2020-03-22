@@ -26,8 +26,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             // TODO 任意接口每次请求都访问数据库，可以增加jcache
-            Map<String, Object> userinfoMap = sqlSession.selectOne("LoginMapper.loadUserByUsername", username);
-            User user = new User(username, MapUtils.getString(userinfoMap, "cust_name"),
+            Map<String, Object> userinfoMap = sqlSession.selectOne("Login.loadUserByUsername", username);
+            User user = new User(username, MapUtils.getString(userinfoMap, "nick_name"),
                     MapUtils.getString(userinfoMap, "bcrypt_login_passwd"),
                     true, true, true, true);
             logger.info("登录用户信息：{}", user);

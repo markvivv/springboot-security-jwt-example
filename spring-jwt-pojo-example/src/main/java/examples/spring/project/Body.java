@@ -13,10 +13,10 @@ public class Body {
     private String msg = "";
 
     @JsonProperty("page_num")
-    private long pageNum = 1;
-    private long total = 1;
+    private long pageNum;
+    private long total;
     @JsonProperty("page_size")
-    private long pageSize = 1;
+    private long pageSize;
 
     private Object data;
 
@@ -26,6 +26,18 @@ public class Body {
 
     public String getMsg() {
         return msg;
+    }
+
+    public long getPageNum() {
+        return pageNum;
+    }
+
+    public long getTotal() {
+        return total;
+    }
+
+    public long getPageSize() {
+        return pageSize;
     }
 
     public Object getData() {
