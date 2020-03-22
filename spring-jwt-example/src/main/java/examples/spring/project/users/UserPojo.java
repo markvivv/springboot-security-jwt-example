@@ -1,12 +1,14 @@
 package examples.spring.project.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.StringJoiner;
 
 public class UserPojo {
 
+    @Size(min = 4, max = 20, message = "用户名只能是4～20位的字符数字！")
     private String userName;
+    @NotBlank(message = "用户昵称不能为空！")
     private String nickName;
 
     public String getUserName() {
