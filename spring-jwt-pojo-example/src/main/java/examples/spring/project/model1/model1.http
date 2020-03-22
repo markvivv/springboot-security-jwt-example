@@ -1,4 +1,4 @@
-POST http://127.0.0.1:8080/authenticate
+POST http://localhost:8080/authenticate
 Content-Type: application/x-www-form-urlencoded
 
 user_name=admin&password=123456
@@ -6,7 +6,7 @@ user_name=admin&password=123456
 ###
 POST http://localhost:8080/model1/add_task
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNTg0ODgwNTQ2LCJleHAiOjE1ODQ5NjY5NDZ9.FAvET3yiqhEl48JK_zMXu5QJNTMVjStyu6-qb0Ws-og
 
 {}
 
