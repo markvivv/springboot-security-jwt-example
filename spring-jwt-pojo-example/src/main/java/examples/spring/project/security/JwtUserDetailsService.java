@@ -1,11 +1,13 @@
 package examples.spring.project.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.Transient;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,6 +45,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         private String username;
         private String nickname;
+        @JsonIgnore
         private String password;
         private boolean accountNonExpired;
         private boolean accountNonLocked;
