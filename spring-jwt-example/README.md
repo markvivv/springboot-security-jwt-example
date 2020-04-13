@@ -1,3 +1,6 @@
+# 设计理念
+1. 为了更好的利用`Spring Validator`能力，按照业务领域建立POJO对象，POJO对象可能对应到多张数据库表；打破原来按照表建立POJO不能跨表操作的问题。
+
 # 数据库表结构
 ```sql
 SET NAMES utf8mb4;
@@ -32,3 +35,29 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 # 生成密码的方法
 调用`PasswordTools`可以生成密码，填入数据库即可
+
+# 安装成`systemd`服务
+- 在`/etc/systemd/system`目录下配置`spring-jw-example.service`文件
+```shell script
+[Unit]
+Description=spring-jwt-example
+After=syslog.target
+
+[Service]
+User=myapp
+ExecStart=/var/spring-jwt-example/spring-jwt-example.1.0.0.RELEASE.jar /var/spring-jwt-example/config
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- 配置成自动启动
+```shell script
+systemctl enable spring-jw-example.service
+```
+
+- 启动服务
+```shell script
+systemctl start spring-jw-example.service
+```
