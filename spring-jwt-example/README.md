@@ -2,7 +2,6 @@
 - **接口校验与pojo使用：** 为了更好的利用`Spring Validator`能力，按照业务领域建立pojo对象，pojo对象可能对应到多张数据库表；打破原来按照表建立pojo不能跨表操作的问题。
 - **包组织方式：** 各个业务包创建自己的controller、pojo、mybatis的mapper文件，每个业务包互相独立，不允许做横向调用，公共模块做抽象组装，做接口调用。
 - **mybatis调用方式：** 为了减少接口编写工作，采用`SqlSession`调用mapper接口的方式进行mybatis调用操作，mybatis的mapper.xml放置到各个业务包中。
-- **mybatis mapper文件和pojo字段自动转换：** mybatis mapper文件中和pojo的属性会忽略大小写，可以全小写获取值
 - **url规范命名：** 为了便于nginx对后台接口做统一分发，在`application.yml`里配置`server.servlet.context-path`属性为`/api`，所有请求默认带`api`前缀。
 - **依赖Jackson配置POJO的Java命名规范和HTTP命名规范转换：** `application.yml`中配置`spring.jackson.property-naming-strategy`的属性为`SNAKE_CASE`，将Java属性的驼峰命名转换为http的标准下划线命名。
 - **配置文件属性自动转换** 使用Duration配置yml文件，允许设置时间单位或者数据单位。参考：[Spring Boot官方手册4.2.8 Properties Conversion](https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/reference/htmlsingle/#boot-features-external-config-conversion)
