@@ -1,7 +1,10 @@
 package examples.spring.project.security.jwt;
 
 import io.jsonwebtoken.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.convert.DurationUnit;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -18,14 +23,17 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
+    private Logger logger = LogManager.getLogger();
+
     @Resource
     private UserDetailsService userDetailsService;
 
     @Value("${jwt.secretkey}")
     private String secretKey;
 
-    @Value("${jwt.validtiy.ms}")
-    private long validityInMs;
+    @Value("${jwt.validtiy}")
+    @DurationUnit(ChronoUnit.MILLIS)
+    private Duration validityInMs;
 
     @PostConstruct
     protected void initial() {
@@ -58,7 +66,7 @@ public class JwtTokenProvider {
 
     private String generateToken(Claims claims) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMs);
+        Date validity = new Date(now.getTime() + validityInMs.toMillis());
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -86,15 +94,18 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 
-            if (claims.getBody().getExpiration().before(new Date())) {
+            if (claims.getExpiration().before(new Date())) {
                 return false;
             }
 
             return true;
+        } catch (ExpiredJwtException e) {
+            logger.warn("Expired JWT token. {}", token);
+            return false;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token");
+            throw new InvalidJwtAuthenticationException("Invalid JWT token");
         }
     }
 
