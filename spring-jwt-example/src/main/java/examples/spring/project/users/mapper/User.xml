@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+    <select id="addUser" resultType="map" parameterType="examples.spring.project.users.UserPojo">
+        INSERT INTO `login_user`(`user_name`, `nick_name`, `bcrypt_passwd`, `create_date`)
+         VALUES (#{username}, #{nickname}, #{bcryptpasswd}, current_time());
+    </select>
+    <update id="updateUser" parameterType="examples.spring.project.users.UserPojo">
+        UPDATE `login_user` SET `nick_name` = #{nickname} where user_name = #{username}
+    </update>
+</mapper>

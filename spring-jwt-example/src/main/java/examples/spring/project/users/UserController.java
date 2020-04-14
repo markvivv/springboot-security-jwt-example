@@ -1,8 +1,10 @@
 package examples.spring.project.users;
 
 import examples.spring.project.Body;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,9 @@ import static org.springframework.http.ResponseEntity.ok;
 public class UserController {
 
     private Logger logger = LogManager.getLogger(getClass());
+
+    @Autowired
+    private SqlSession sqlSession;
 
     @PostMapping(value="/add_user")
     public ResponseEntity addUser(@Valid @RequestBody UserPojo userPojo) {
