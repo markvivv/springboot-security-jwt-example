@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,13 @@ public class UserController {
     @PostMapping(value="/add_user")
     public ResponseEntity addUser(@Valid @RequestBody UserPojo userPojo) {
         logger.debug("添加用户信息: {}", userPojo);
-        return ok(Body.build().ok("添加用户成功。", userPojo));
+        userPojo.setBcryptPasswd(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(userPojo.getPassword()));
+        int result = sqlSession.insert("User.addUser", userPojo);
+        if (result == 1) {
+            return ok(Body.build().ok("添加用户成功。", userPojo));
+        } else {
+            return ok(Body.build().fail("添加用户失败。"));
+        }
     }
 
     @PostMapping(value="/edit_user")
