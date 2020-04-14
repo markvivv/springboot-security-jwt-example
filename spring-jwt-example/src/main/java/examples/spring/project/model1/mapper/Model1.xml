@@ -11,4 +11,8 @@
         FROM table_name t
         WHERE t.sn = #{sn}
     </select>
+    <insert id="addTask" parameterType="examples.spring.project.model1.Model1Pojo">
+        insert into task values(#{taskId}, #{taskName}, #{taskStartDate}, #{taskEndDate}, #{memberNum})
+    </insert>
+
 </mapper>
