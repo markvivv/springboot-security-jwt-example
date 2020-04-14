@@ -3,7 +3,6 @@ package examples.spring.project.config;
 import examples.spring.project.security.jwt.JwtSecurityConfigurer;
 import examples.spring.project.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,9 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private UserDetailsService jwtUserDetailsService;
 
-    @Value("#{servletContext.contextPath}")
-    private String servletContextPath;
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -52,7 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS,"**").permitAll()
-                .antMatchers(servletContextPath + "/authenticate", servletContextPath + "/refresh_token").permitAll()
+                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/refresh_token").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .apply(new JwtSecurityConfigurer(jwtTokenProvider));
