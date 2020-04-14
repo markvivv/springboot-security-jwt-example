@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -33,20 +32,39 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
+    /**
+     * 根据账号、角色信息创建token
+     *
+     * @param username
+     * @param roles
+     * @return
+     */
     public String createToken(String username, List<String> roles) {
-
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roles);
+        return generateToken(claims);
+    }
 
+    /**
+     * 刷新token信息
+     *
+     * @param token
+     * @return
+     */
+    public String refreshToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return generateToken(claims);
+    }
+
+    private String generateToken(Claims claims) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMs);
-
-        return Jwts.builder()//
-            .setClaims(claims)//
-            .setIssuedAt(now)//
-            .setExpiration(validity)//
-            .signWith(SignatureAlgorithm.HS256, secretKey)//
-            .compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
     public Authentication getAuthentication(String token) {
