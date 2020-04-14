@@ -7,7 +7,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d %p %c{1.}:%L[%t] %m%n" />
         </Console>
-        <!--<RollingRandomAccessFile name="RollingRandomAccessFile" fileName="logs/info.log" filePattern="logs/info-%d{MM-dd-yyyy}.log.gz">
+        <!--%c{1.}<RollingRandomAccessFile name="RollingRandomAccessFile" fileName="logs/info.log" filePattern="logs/info-%d{MM-dd-yyyy}.log.gz">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
@@ -19,9 +19,9 @@
     </Appenders>
     <Loggers>
         <Logger name="examples.spring" level="DEBUG"/>
-        <logger name="org.mybatis" level="debug" />
-        <logger name="druid.sql" level="debug" />
-        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="debug" />
+        <logger name="org.mybatis" level="INFO" />
+        <logger name="druid.sql" level="DEBUG" />
+        <logger name="org.springframework.web.servlet.mvc.method.annotation" level="INFO" />
         <Root level="INFO">
             <AppenderRef ref="Console" />
             <!--<AppenderRef ref="RollingRandomAccessFile" />-->
