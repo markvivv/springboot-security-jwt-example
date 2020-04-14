@@ -39,7 +39,6 @@ server:
 jwt:
   secretkey: mV0JdNgw4tNtQvvEwapWZWRbsvS5b4r7g46C
   # 24 hours
-  validtiy:
-    ms: 86400000
+  validtiy: 24h
 
 
