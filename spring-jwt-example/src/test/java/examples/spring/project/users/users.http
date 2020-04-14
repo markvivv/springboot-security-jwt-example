@@ -24,8 +24,9 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-"user_name": "test",
-"nick_name": "测试账号"
+  "username": "test",
+  "nickname": "测试账号",
+  "password": "123456"
 }
 
 ###
