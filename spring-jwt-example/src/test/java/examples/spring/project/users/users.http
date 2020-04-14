@@ -11,6 +11,14 @@ Accept: application/json
 Authorization: Bearer {{auth_token}}
 
 ###
+POST http://localhost:8080/api/refresh_token
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{}
+
+> {% client.global.set("auth_token", response.body.data.token); %}
+###
 POST http://localhost:8080/api/users/add_user
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
