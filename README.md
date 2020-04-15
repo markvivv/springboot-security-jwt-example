@@ -1,24 +1,33 @@
-# 设计理念
-- **接口校验与pojo使用：** 为了更好的利用`Spring Validator`能力，按照业务领域建立pojo对象，pojo对象可能对应到多张数据库表；打破原来按照表建立pojo不能跨表操作的问题。
-- **包组织方式：** 各个业务包创建自己的controller、pojo、mybatis的mapper文件，每个业务包互相独立，不允许做横向调用，公共模块做抽象组装，做接口调用。
-- **mybatis调用方式：** 为了减少接口编写工作，采用`SqlSession`调用mapper接口的方式进行mybatis调用操作，mybatis的mapper.xml放置到各个业务包中。
-- **url规范命名：** 为了便于nginx对后台接口做统一分发，在`application.yml`里配置`server.servlet.context-path`属性为`/api`，所有请求默认带`api`前缀。
-- **依赖Jackson配置POJO的Java命名规范和HTTP命名规范转换：** `application.yml`中配置`spring.jackson.property-naming-strategy`的属性为`SNAKE_CASE`，将Java属性的驼峰命名转换为http的标准下划线命名。
-- **配置文件属性自动转换** 使用Duration配置yml文件，允许设置时间单位或者数据单位。参考：[Spring Boot官方手册4.2.8 Properties Conversion](https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/reference/htmlsingle/#boot-features-external-config-conversion)
-  - 配置样例参考配置文件`application.yml`的`jwt.validtiy`属性
-    ```yaml
-    jwt:
-      # 24 hours
-      validtiy: 24h
-    ```
-  - 代码样例参考`JwtTokenPrivider`的`validtiyInMs`属性
-    ```java
-    @Value("${jwt.validtiy}")
-    @DurationUnit(ChronoUnit.MILLIS)
-    private Duration validityInMs;
-    ```
+# Spring Security + JWT + Mybatis完整示例
 
-# 工程目录结构说明
+## 设计特点
+- JWT和Spring Security结合进行授权验证。
+- 接口支持Pojo传参，在Pojo上使用注解进行参数校验，依赖Spring的Validation。
+- 使用统一返回的Body对象，支持返回Pojo对象或者Map封装的数据集合。
+- mybatis文件放置在源代码目录，按照模块打包controller、pojo、mybatis mapper文件。每个业务包互相独立，不允许做横向调用，公共模块做抽象组装，做接口调用。
+- 使用`SqlSession`调用mapper配置文件，避免编写额外的接口。
+- 使用IDEA提供的HTTP Request功能进行接口测试，测试脚本放在test目录。
+- 所有后端接口请求配置统一的前缀，方便与前端使用同一PORT进行部署，后端请求转发到本应用进行处理。
+  - 在`application.yml`里配置`server.servlet.context-path`属性为`/api`，所有请求默认带`api`前缀。
+- 遵循Java的驼峰命名和HTTP的下划线命名，对POJO启用Jackson的`property-naming-strategy = SNAKE_CASE`配置。
+  - `application.yml`中配置`spring.jackson.property-naming-strategy`的属性为`SNAKE_CASE`，将Java属性的驼峰命名转换为http的标准下划线命名。
+- 使用时间单位配置yml文件，增加yml文件中时间配置属性可读性，Spring支持时间和数据大小两种单位。
+  - 使用Duration配置yml文件，允许设置时间单位或者数据单位。参考：[Spring Boot官方手册4.2.8 Properties Conversion](https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/reference/htmlsingle/#boot-features-external-config-conversion)
+  - 配置样例参考配置文件`application.yml`的`jwt.validtiy`属性
+      ```yaml
+      jwt:
+        # 24 hours
+        validtiy: 24h
+      ```
+    
+  - 代码样例参考`JwtTokenPrivider`的`validtiyInMs`属性
+      ```java
+      @Value("${jwt.validtiy}")
+      @DurationUnit(ChronoUnit.MILLIS)
+      private Duration validityInMs;
+      ```
+  
+## 工程目录结构说明
 ```
 spring-jwt-example/                        * 工程目录名，可以根据实际项目情况进行修改
   |- resources
@@ -68,8 +77,8 @@ spring-jwt-example/                        * 工程目录名，可以根据实�
      |- pom.xml                             * pom配置。当前jwt依赖jsonwebtoken.jjwt
 ```
 
-# 接口清单
-## 登录验证（/api/authenticate）
+## 接口清单
+### 登录验证（/api/authenticate）
 
 - 请求header
 
@@ -117,7 +126,7 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 }
 ```
 
-## 刷新token（/api/refresh_token）
+### 刷新token（/api/refresh_token）
 
 - 请求Header
 
@@ -142,7 +151,7 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 
   *参考登录验证接口*
 
-## 获取当前用户信息（/api/current_user）
+### 获取当前用户信息（/api/current_user）
 通过还在有效期的token，获取当前的用户信息，如果token已经失效，接口返回http code 403。
 - 请求Header
 
@@ -195,7 +204,7 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 }
 ```
 
-# 数据库表结构
+## 数据库表结构
 ```sql
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -227,10 +236,10 @@ COMMIT;
 SET FOREIGN_KEY_CHECKS = 1;
 ```
 
-# 生成密码的方法
+## 生成密码的方法
 调用`PasswordTools`可以生成密码，填入数据库即可
 
-# 安装成`systemd`服务
+## 安装成`systemd`服务
 - 在`/etc/systemd/system`目录下配置`spring-jw-example.service`文件
 ```shell script
 [Unit]
