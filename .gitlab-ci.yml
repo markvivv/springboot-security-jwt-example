@@ -3,7 +3,6 @@ image: maven:latest
 stages:
   - build
   - test
-  - run
 
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"

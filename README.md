@@ -26,6 +26,7 @@
       @DurationUnit(ChronoUnit.MILLIS)
       private Duration validityInMs;
       ```
+- 配置.gitlab-ci.yml，启用GitLab基于Maven的自动持续集成（Auto CI）
   
 ## 工程目录结构说明
 ```
@@ -322,4 +323,33 @@ systemctl enable spring-jw-example.service
 - 启动服务
 ```shell script
 systemctl start spring-jw-example.service
+```
+
+## 基于GitLab的CI
+参考[How to deploy Maven projects to Artifactory with GitLab CI/CD](https://docs.gitlab.com/ee/ci/examples/artifactory_and_gitlab/index.html)添加.gitlab-ci.yml文件，只做build，test，所以文件配置如下
+```yaml
+image: maven:latest
+
+stages:
+  - build
+  - test
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+build:
+  stage: build
+  script:
+    - mvn $MAVEN_CLI_OPTS compile
+
+test:
+  stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS test
 ```
