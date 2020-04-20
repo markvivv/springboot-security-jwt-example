@@ -353,3 +353,13 @@ test:
   script:
     - mvn $MAVEN_CLI_OPTS test
 ```
+
+为了加速maven仓库访问，在工程中配置`.m2/settings.xml`文件，并且在该文件中的仓库镜像配置阿里云maven加速，如果涉及到内网Maven访问，也可以在这里配置。
+```xml
+<mirror>
+    <id>alimaven</id>
+    <name>aliyun maven</name>
+    <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+<mirrorOf>central</mirrorOf>
+</mirror>
+```
