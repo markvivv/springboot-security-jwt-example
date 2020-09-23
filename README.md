@@ -3,7 +3,7 @@
 ## 设计特点
 - JWT和Spring Security结合进行授权验证。
 - 接口支持Pojo传参，在Pojo上使用注解进行参数校验，依赖Spring的Validation。
-- 使用统一返回的Body对象，支持返回Pojo对象或者Map封装的数据集合，Body中统一处理分页查询返回。
+- 使用统一返回的Body对象，支持返回Pojo对象或者Map封装的数据集合。
 - mybatis文件放置在源代码目录，按照模块打包controller、pojo、mybatis mapper文件。每个业务包互相独立，不允许做横向调用，公共模块做抽象组装，做接口调用。
 - 使用`SqlSession`调用mapper配置文件，避免编写额外的接口。
 - 使用IDEA提供的HTTP Request功能进行接口测试，测试脚本放在test目录。
@@ -38,7 +38,7 @@ spring-jwt-example/                        * 工程目录名，可以根据实�
      |- application-mybatis.xml            * mybatis配置，包含pagehelper配置
      |- log4j2.xml                         * log4j2配置文件，默认打开console配置，可以配置异步输出；打印SQL的日志级别可以配置好
   |- src/main/java
-     |- Body.java                          * controller返回org.springframework.http.ResponseEntity，Body是ResponseEntity的数据结构体，兼容@Valid返回的数据结构，包含分页参数的处理
+     |- Body.java                          * controller返回org.springframework.http.ResponseEntity，Body是ResponseEntity的数据结构体，兼容@Valid返回的数据结构
      |- SpringJwtExampleApplication.java   * 启动类，根据项目情况进行修改
      |- examples.spring.project            * 源码包结构，根据实际项目进行重修改
         |- config                          * 框架类的各种配置
@@ -362,101 +362,4 @@ test:
     <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
     <mirrorOf>central</mirrorOf>
 </mirror>
-```
-
-# SpringBoot tomcat 性能测试情况
-
-先说结论：
-- 服务器操作系统`CentOS Linux release 7.6.1810`，仅仅调整session的openfile至10万，未做任何其他参数调整
-- 安装`Open JDK11.0.8`，Java进程启动参数`-server -Xss256k -Xms8g -Xmx8g`
-- 服务器配置：VMWare虚拟化16vCPU，32G，稳定运行在并发3000个请求/秒左右，国外有人测试不调整任何参数能够稳定在5000个并发以内
-
-## 测试命令准备
-
-### 安装ab test命令
-
-```shell script
-[root@node-kubeadm-251 ~]# yum -y install httpd-tools
-```
-### 准备json文件
-
-```json
-{
-  "id": "452FFCA6-F394-4AA1-9447-F6B839836F50",
-  "servId": "E0619A20-7D33-4D48-874F-45C0D9314F5E",
-  "severName": "汉十孝感服务区",
-  "areaName": "北区",
-  "devName": "西区卡口入口摄像机",
-  "reportTime": "2017-08-25 11:32",
-  "plate": "吉AK2222",
-  "plateColor": "黄色",
-  "carColor": "红色",
-  "leaveOrEnter": "进入",
-  "carSize": "大型车",
-  "area": "北区",
-  "createDate": "2017-08-25 11:35:00"
-}
-```
-
-### 调用/api/authenticate获取token后开始测试
-
-```shell script
-[root@node-kubeadm-251 ~]# ab -n300000 -c200 -T application/json -H "Content-Type: application/json" -H  "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNjAwODI0NTI2LCJleHAiOjE2MDA5MTA5MjZ9.mJAB0Z6iEUdtyXBobB0GTvAjLKPCiW9lbIws68nEzZI" -p test_post.json http://127.0.0.1:8080/api/benchmarks/post_dev_info
-This is ApacheBench, Version 2.3 <$Revision: 1430300 $>
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
-
-Benchmarking 127.0.0.1 (be patient)
-Completed 30000 requests
-Completed 60000 requests
-Completed 90000 requests
-Completed 120000 requests
-Completed 150000 requests
-Completed 180000 requests
-Completed 210000 requests
-Completed 240000 requests
-Completed 270000 requests
-Completed 300000 requests
-Finished 300000 requests
-
-
-Server Software:        
-Server Hostname:        127.0.0.1
-Server Port:            8080
-
-Document Path:          /api/benchmarks/post_dev_info
-Document Length:        552 bytes
-
-Concurrency Level:      200
-Time taken for tests:   90.035 seconds
-Complete requests:      300000
-Failed requests:        0
-Write errors:           0
-Total transferred:      278400000 bytes
-Total body sent:        239700000
-HTML transferred:       165600000 bytes
-Requests per second:    3332.05 [#/sec] (mean)
-Time per request:       60.023 [ms] (mean)
-Time per request:       0.300 [ms] (mean, across all concurrent requests)
-Transfer rate:          3019.67 [Kbytes/sec] received
-                        2599.91 kb/s sent
-                        5619.58 kb/s total
-
-Connection Times (ms)
-              min  mean[+/-sd] median   max
-Connect:        0    0   0.4      0      17
-Processing:     1   60  78.5     45    1317
-Waiting:        0   60  78.5     44    1317
-Total:          1   60  78.5     45    1317
-
-Percentage of the requests served within a certain time (ms)
-  50%     45
-  66%     58
-  75%     86
-  80%     96
-  90%    145
-  95%    201
-  98%    289
-  99%    370
- 100%   1317 (longest request)
 ```

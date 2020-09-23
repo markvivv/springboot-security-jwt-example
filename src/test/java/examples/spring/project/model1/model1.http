@@ -1,9 +1,7 @@
 POST http://localhost:8080/api/model1/add_task
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNTk4NTE4NjU3LCJleHAiOjE1OTg2MDUwNTd9.s_o8tqtUGi_tKxqUlfFrvqimy1R7W1NNhHLTupfTSJQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNTg0ODgwNTQ2LCJleHAiOjE1ODQ5NjY5NDZ9.FAvET3yiqhEl48JK_zMXu5QJNTMVjStyu6-qb0Ws-og
 
-{
-
-}
+{}
 
 ###

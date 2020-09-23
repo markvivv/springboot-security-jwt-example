@@ -29,15 +29,11 @@ public class UserController {
     public ResponseEntity addUser(@Valid @RequestBody UserPojo userPojo) {
         logger.debug("添加用户信息: {}", userPojo);
         userPojo.setBcryptPasswd(PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(userPojo.getPassword()));
-        try {
-            int result = sqlSession.insert("User.addUser", userPojo);
-            if (result == 1) {
-                return ok(Body.build().ok("添加用户成功。", userPojo));
-            } else {
-                return ok(Body.build().fail("添加用户失败。"));
-            }
-        } catch (Exception e) {
-            return ok(Body.build().fail("添加用户发生未知错误。" + e.getMessage()));
+        int result = sqlSession.insert("User.addUser", userPojo);
+        if (result == 1) {
+            return ok(Body.build().ok("添加用户成功。", userPojo));
+        } else {
+            return ok(Body.build().fail("添加用户失败。"));
         }
     }
 
