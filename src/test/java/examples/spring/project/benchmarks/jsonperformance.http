@@ -1,0 +1,21 @@
+POST http://localhost:8080/api/benchmarks/post_dev_info
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNjAwNzY4MzgzLCJleHAiOjE2MDA4NTQ3ODN9.-I0KeQKHoyOam1O1g801EEVo7l1CWyznFy7_WlbLzo0
+
+{
+  "id": "452FFCA6-F394-4AA1-9447-F6B839836F50",
+  "servId": "E0619A20-7D33-4D48-874F-45C0D9314F5E",
+  "severName": "汉十孝感服务区",
+  "areaName": "北区",
+  "devName": "西区卡口入口摄像机",
+  "reportTime": "2017-08-25 11:32",
+  "plate": "吉AK2619",
+  "plateColor": "黄色",
+  "carColor": "红色",
+  "leaveOrEnter": "进入",
+  "carSize": "大型车",
+  "area": "北区",
+  "createDate": "2017-08-25 11:35:00"
+}
+
+###
