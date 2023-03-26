@@ -1,3 +1,5 @@
+# 正在准备SpringBoot3 + SpringSecurity6 + JWT的代码，此工程当前仍然是老版本
+
 # Spring Security + JWT + Mybatis完整示例
 
 ## 设计特点
