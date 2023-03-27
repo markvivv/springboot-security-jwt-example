@@ -1,0 +1,582 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SpringSecurity6-jwt-example",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/api/authenticate": {
+      "post": {
+        "summary": "登录",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_name": {
+                          "type": "string"
+                        },
+                        "token_expiration": {
+                          "type": "string"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "user_name",
+                        "token_expiration",
+                        "token"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "x-apifox-orders": [
+                        "user_name",
+                        "token_expiration",
+                        "token"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": 200,
+                      "message": "登录成功",
+                      "data": {
+                        "user_name": "admin",
+                        "token_expiration": "2023-03-28 13:46:35",
+                        "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwibmlja25hbWUiOiIiLCJpYXQiOjE2Nzk4OTU5OTUsImV4cCI6MTY3OTk4MjM5NX0.rlz-jubhLmJJH17vsgao63TICoh_1M-ncrNUPLuF09cWASYv2QbObsE9FVbFQ8y6HP8nXEktjLww3FpxwVoa-w"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2497217/apis/api-71002424-run"
+      }
+    },
+    "/api/refresh_token": {
+      "post": {
+        "summary": "刷新token",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwibmlja25hbWUiOiIiLCJpYXQiOjE2Nzk4OTQ0NDIsImV4cCI6MTY3OTk4MDg0Mn0.2HV0DoNEDP73Lqvnxc7PEx6gr2dxloAOZk_ELwSKezMyOQMHPosXHals-icfvig1H5fgPTKHNR1S0Tu-0wUIBA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user_name": {
+                          "type": "string"
+                        },
+                        "token_expiration": {
+                          "type": "string"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "user_name",
+                        "token_expiration",
+                        "token"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "x-apifox-orders": [
+                        "user_name",
+                        "token_expiration",
+                        "token"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": 200,
+                      "message": "刷新token成功",
+                      "data": {
+                        "user_name": "admin",
+                        "token_expiration": "2023-03-28 13:47:07",
+                        "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwibmlja25hbWUiOiIiLCJpYXQiOjE2Nzk4OTYwMjcsImV4cCI6MTY3OTk4MjQyN30.5UUG5G3F4UjeFU5y5hPHV9Giv1EqYzc1W_cTJLctT-64EoFA2IRJuIooX3zkTqU6xtDAcfNZGh9AdZ33qNo8NQ"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2497217/apis/api-71002450-run"
+      }
+    },
+    "/api/current_user": {
+      "get": {
+        "summary": "当前用户",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwibmlja25hbWUiOiIiLCJpYXQiOjE2Nzk4OTQ1NDMsImV4cCI6MTY3OTk4MDk0M30.V8vSSXUK2TsXbYmb_zFJ7RnxroalTNW7W013JjNSwcnA5cQ8r8gb7uk2PbUlUV7zlJ-1O8lxyq6m9FfEA_jzPQ",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "username": {
+                          "type": "string"
+                        },
+                        "nickname": {
+                          "type": "string"
+                        },
+                        "authorities": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "account_non_expired": {
+                          "type": "boolean"
+                        },
+                        "account_non_locked": {
+                          "type": "boolean"
+                        },
+                        "credentials_non_expired": {
+                          "type": "boolean"
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "username",
+                        "nickname",
+                        "authorities",
+                        "account_non_expired",
+                        "account_non_locked",
+                        "credentials_non_expired",
+                        "enabled"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "x-apifox-orders": [
+                        "username",
+                        "nickname",
+                        "authorities",
+                        "account_non_expired",
+                        "account_non_locked",
+                        "credentials_non_expired",
+                        "enabled"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": 200,
+                      "message": "成功获取当前用户信息",
+                      "data": {
+                        "username": "admin",
+                        "nickname": "",
+                        "authorities": [],
+                        "account_non_expired": true,
+                        "account_non_locked": true,
+                        "credentials_non_expired": true,
+                        "enabled": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2497217/apis/api-71002497-run"
+      }
+    },
+    "/api/benchmarks/post_dev_info": {
+      "post": {
+        "summary": "设备上报测试",
+        "x-apifox-folder": "",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwibmlja25hbWUiOiIiLCJpYXQiOjE2Nzk4OTQ1NDMsImV4cCI6MTY3OTk4MDk0M30.V8vSSXUK2TsXbYmb_zFJ7RnxroalTNW7W013JjNSwcnA5cQ8r8gb7uk2PbUlUV7zlJ-1O8lxyq6m9FfEA_jzPQ",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "servId": {
+                    "type": "string"
+                  },
+                  "severName": {
+                    "type": "string"
+                  },
+                  "areaName": {
+                    "type": "string"
+                  },
+                  "devName": {
+                    "type": "string"
+                  },
+                  "reportTime": {
+                    "type": "string"
+                  },
+                  "plate": {
+                    "type": "string"
+                  },
+                  "plateColor": {
+                    "type": "string"
+                  },
+                  "carColor": {
+                    "type": "string"
+                  },
+                  "leaveOrEnter": {
+                    "type": "string"
+                  },
+                  "carSize": {
+                    "type": "string"
+                  },
+                  "area": {
+                    "type": "string"
+                  },
+                  "createDate": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "servId",
+                  "severName",
+                  "areaName",
+                  "devName",
+                  "reportTime",
+                  "plate",
+                  "plateColor",
+                  "carColor",
+                  "leaveOrEnter",
+                  "carSize",
+                  "area",
+                  "createDate"
+                ],
+                "x-apifox-ignore-properties": [],
+                "x-apifox-orders": [
+                  "id",
+                  "servId",
+                  "severName",
+                  "areaName",
+                  "devName",
+                  "reportTime",
+                  "plate",
+                  "plateColor",
+                  "carColor",
+                  "leaveOrEnter",
+                  "carSize",
+                  "area",
+                  "createDate"
+                ]
+              },
+              "example": {
+                "id": "452FFCA6-F394-4AA1-9447-F6B839836F50",
+                "servId": "E0619A20-7D33-4D48-874F-45C0D9314F5E",
+                "severName": "汉十孝感服务区",
+                "areaName": "北区",
+                "devName": "西区卡口入口摄像机",
+                "reportTime": "2017-08-25 11:32",
+                "plate": "吉AK2222",
+                "plateColor": "黄色",
+                "carColor": "红色",
+                "leaveOrEnter": "进入",
+                "carSize": "大型车",
+                "area": "北区",
+                "createDate": "2017-08-25 11:35:00"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "servId": {
+                          "type": "string"
+                        },
+                        "severName": {
+                          "type": "string"
+                        },
+                        "areaName": {
+                          "type": "string"
+                        },
+                        "devName": {
+                          "type": "string"
+                        },
+                        "reportTime": {
+                          "type": "string"
+                        },
+                        "plate": {
+                          "type": "string"
+                        },
+                        "plateColor": {
+                          "type": "string"
+                        },
+                        "carColor": {
+                          "type": "string"
+                        },
+                        "leaveOrEnter": {
+                          "type": "string"
+                        },
+                        "carSize": {
+                          "type": "string"
+                        },
+                        "area": {
+                          "type": "string"
+                        },
+                        "createDate": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "servId",
+                        "severName",
+                        "areaName",
+                        "devName",
+                        "reportTime",
+                        "plate",
+                        "plateColor",
+                        "carColor",
+                        "leaveOrEnter",
+                        "carSize",
+                        "area",
+                        "createDate"
+                      ],
+                      "x-apifox-ignore-properties": [],
+                      "x-apifox-orders": [
+                        "id",
+                        "servId",
+                        "severName",
+                        "areaName",
+                        "devName",
+                        "reportTime",
+                        "plate",
+                        "plateColor",
+                        "carColor",
+                        "leaveOrEnter",
+                        "carSize",
+                        "area",
+                        "createDate"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": [],
+                  "x-apifox-orders": [
+                    "status",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "status": 200,
+                      "message": "设备信息上报成功。",
+                      "data": {
+                        "id": "452FFCA6-F394-4AA1-9447-F6B839836F50",
+                        "servId": "E0619A20-7D33-4D48-874F-45C0D9314F5E",
+                        "severName": "汉十孝感服务区",
+                        "areaName": "北区",
+                        "devName": "西区卡口入口摄像机",
+                        "reportTime": "2017-08-25 11:32",
+                        "plate": "吉AK2222",
+                        "plateColor": "黄色",
+                        "carColor": "红色",
+                        "leaveOrEnter": "进入",
+                        "carSize": "大型车",
+                        "area": "北区",
+                        "createDate": "2017-08-25 11:35:00"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2497217/apis/api-71002571-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  },
+  "servers": []
+}
