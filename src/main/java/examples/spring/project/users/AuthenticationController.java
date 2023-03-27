@@ -42,7 +42,7 @@ public class AuthenticationController {
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity authenticate(@Valid @RequestParam("user_name") @NotBlank(message = "用户名不能为空！") String username,
+    public ResponseEntity authenticate(@Valid @RequestParam("username") @NotBlank(message = "用户名不能为空！") String username,
                                        @RequestParam("password") @NotBlank(message = "密码不能为空！") String password) {
         logger.debug("用户 {} 开始登录。", username);
 
@@ -70,7 +70,7 @@ public class AuthenticationController {
         String currToken = jwtTokenProvider.resolveToken(request);
         String newToken = jwtTokenProvider.refreshToken(currToken);
         Map<String, Object> model = new HashMap<>();
-        model.put("user_name", jwtTokenProvider.getUsername(newToken));
+        model.put("username", jwtTokenProvider.getUsername(newToken));
         model.put("token", newToken);
         model.put("token_expiration", dateTimeFormatter.format(
                 jwtTokenProvider.getTokenExpiration(newToken)
