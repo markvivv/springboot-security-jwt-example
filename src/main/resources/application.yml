@@ -37,7 +37,7 @@ server:
     context-path: /api
 
 jwt:
-  secretkey: mV0JdNgw4tNtQvvEwapWZWRbsvS5b4r7g46C
+  secretkey: rJ1lN9tP1rR2iX7hX1iO1wF9mW8aS2mAmV0JdNgw4tNtQvvEwapWZWRbsvS5b4r7g46C
   # 24 hours
   validtiy: 24h
 
