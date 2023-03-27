@@ -19,6 +19,10 @@ public class Body {
 
     private Object data;
 
+    public static Body build() {
+        return new Body();
+    }
+
     public int getStatus() {
         return status;
     }
@@ -41,10 +45,6 @@ public class Body {
 
     public Object getData() {
         return data;
-    }
-
-    public static Body build() {
-        return new Body();
     }
 
     public Body ok(String message) {

@@ -8,7 +8,7 @@ spring:
     property-naming-strategy: SNAKE_CASE
     default-property-inclusion: NON_NULL
     serialization:
-      indent-output:  true
+      indent-output: true
       write-dates-as-timestamps: false
       fail-on-empty-beans: false
     deserialization:
@@ -17,9 +17,9 @@ spring:
       accept-single-value-as-array: true
 
   servlet:
-      multipart:
-        max-file-size: 10MB
-        max-request-size: 100MB
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
   output:
     ansi:
       #DETECT：会检查终端是否支持ANSI，是的话就采用彩色输出（推荐项）

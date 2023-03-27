@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +65,7 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping(value="/refresh_token")
+    @PostMapping(value = "/refresh_token")
     public ResponseEntity refreshToken(HttpServletRequest request) {
         String currToken = jwtTokenProvider.resolveToken(request);
         String newToken = jwtTokenProvider.refreshToken(currToken);

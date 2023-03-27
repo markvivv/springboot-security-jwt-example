@@ -20,7 +20,7 @@ public class JsonPerformance {
 
     private final Logger logger = LogManager.getLogger(getClass());
 
-    @PostMapping(value="/post_dev_info")
+    @PostMapping(value = "/post_dev_info")
     public ResponseEntity postDevInfo(@Valid @RequestBody Map<String, Object> param) {
         logger.debug("设备信息: {}", param);
         try {
