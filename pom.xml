@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>examples</groupId>
-    <artifactId>spring-jwt-example</artifactId>
+    <artifactId>spring3-security6-jwt-example</artifactId>
     <version>0.0.1.SNAPSHOT</version>
     <name>springboot3-security6-jwt-example</name>
     <description>完整的SpringBoot3 Security6 Web项目工程示例</description>

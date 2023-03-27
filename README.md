@@ -1,6 +1,4 @@
-# 正在准备SpringBoot3 + SpringSecurity6 + JWT的代码，此工程当前仍然是老版本
-
-# Spring Security + JWT + Mybatis完整示例
+# Spring Security 6 + JWT + Mybatis完整示例
 
 ## 1. 设计特点
 - JWT和Spring Security结合进行授权验证。
@@ -14,7 +12,7 @@
 - 遵循Java的驼峰命名和HTTP的下划线命名，对POJO启用Jackson的`property-naming-strategy = SNAKE_CASE`配置。
   - `application.yml`中配置`spring.jackson.property-naming-strategy`的属性为`SNAKE_CASE`，将Java属性的驼峰命名转换为http的标准下划线命名。
 - 使用时间单位配置yml文件，增加yml文件中时间配置属性可读性，Spring支持时间和数据大小两种单位。
-  - 使用Duration配置yml文件，允许设置时间单位或者数据单位。参考：[Spring Boot官方手册4.2.8 Properties Conversion](https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/reference/htmlsingle/#boot-features-external-config-conversion)
+  - 使用Duration配置yml文件，允许设置时间单位或者数据单位。参考：[Spring Boot官方手册3.0.4 Properties Conversion](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#features.external-config.typesafe-configuration-properties.conversion)
   - 配置样例参考配置文件`application.yml`的`jwt.validtiy`属性
       ```yaml
       jwt:
@@ -32,7 +30,7 @@
   
 ## 2. 工程目录结构说明
 ```
-spring-jwt-example/                        * 工程目录名，可以根据实际项目情况进行修改
+spring3-jwt-example/                        * 工程目录名，可以根据实际项目情况进行修改
   |- resources
      |- application.yml                    * 主配置文件，包含激活配置文件，jackson，servlet，jwt，日志配置等
      |- application-dev.yml                * 数据库配置 
@@ -90,13 +88,13 @@ spring-jwt-example/                        * 工程目录名，可以根据实�
 
 |参数名|参数值|说明|
 | ---- | ---- | ---- |
-| user_name | admin | 登录账号 |
+| username | admin | 登录账号 |
 | password | 123456 | 登录密码 |
 
 - 请求示例
 
 ```shell
-curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
+curl -d "username=admin&password=123456" http://localhost:8080/api/authenticate
 ```
 
 - 响应参数
@@ -111,7 +109,7 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 
 |参数名|说明|
 | ---- | ---- |
-| user_name | 登录用户名 |
+| username | 登录用户名 |
 | token_expiration | token过期时间，需要在过期前调用refresh_token刷新token |
 | token | token本身，注意此token没有包含`Bearer `前缀，设置到http header时需要增加`Bearer `前缀 |
 
@@ -122,8 +120,8 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
   "message": "登录成功",
   "data": {
     "user_name": "admin",
-    "token_expiration": "2020-04-14 14:31:42",
-    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNTg2ODQ1ODk3LCJleHAiOjE1ODY4NDU5MDJ9.-JiaVq4HlcIceojaa2SxgpZYA_MqhHezvAganke7OyA"
+    "token_expiration": "2023-03-28 13:34:06",
+    "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwibmlja25hbWUiOiIiLCJpYXQiOjE2Nzk4OTUyNDYsImV4cCI6MTY3OTk4MTY0Nn0.ddZyCbnHAykshhjfTMftsfr4n5iuYX25TZNb8miZeR3XjwE-Sle3lfS4JHYIKcnjx9aAIURoZhq7u64R125Nfg"
   }
 }
 ```
@@ -197,7 +195,8 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
   "message": "成功获取当前用户信息",
   "data": {
     "username": "admin",
-    "nickname": "系统管理员",
+    "nickname": "",
+    "authorities": [],
     "account_non_expired": true,
     "account_non_locked": true,
     "credentials_non_expired": true,
@@ -309,6 +308,22 @@ Query OK, 1 row affected (0.03 sec)
 mysql>
 ```
 
+- 建表语句
+
+```sql
+CREATE TABLE `login_user` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_name` varchar(50) DEFAULT NULL COMMENT '',
+    `nick_name` varchar(200) DEFAULT NULL COMMENT '',
+    `bcrypt_passwd` char(68) DEFAULT NULL COMMENT '',
+    `status` char(1) DEFAULT 'Y' COMMENT '\nY \nL\nD',
+    `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '',
+    `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_user_name` (`user_name`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='';
+```
+
 ## 4.7. 生成密码的方法
 调用`PasswordTools`可以生成密码，填入数据库即可
 
@@ -319,10 +334,11 @@ mysql>
 - 修改log4j2.xml文件，增加日志文件输出
 
 ### 5.1. 示例项目启动脚本start.sh
-```shell script
+
+```shell
 #!/bin/bash
 APP_HOME=$(cd "$(dirname "$0")";pwd)
-APP_EXEC_JAR="spring-activemq-example-0.0.1.RELEASE.jar"
+APP_EXEC_JAR="spring3-security6-jwt-example-0.0.1.SNAPSHOT.jar"
 PIDFILE="$APP_HOME/pid"
 checkRunning(){
     if [ -f "$PIDFILE" ]; then
@@ -359,7 +375,8 @@ echo $! > "$APP_HOME/pid";
 
 ### 5.2. 示例项目停止脚本stop.sh
 当前采用直接kill进程的方式，未来计划提供安全停止的方法
-```shell script
+
+```shell
 #!/bin/sh
 APP_HOME=$(cd "$(dirname "$0")";pwd)
 PID=`cat $APP_HOME/pid`
@@ -373,14 +390,15 @@ done
 
 ### 5.3. 安装成`systemd`服务
 - 在`/etc/systemd/system`目录下配置`spring-jw-example.service`文件
-```shell script
+
+```shell
 [Unit]
-Description=spring-jwt-example
+Description=spring-jw-example
 After=syslog.target
 
 [Service]
 User=myapp
-ExecStart=/var/spring-jwt-example/start.sh
+ExecStart=/var/spring3-security6-jwt-example/start.sh
 SuccessExitStatus=143
 
 [Install]
@@ -388,12 +406,12 @@ WantedBy=multi-user.target
 ```
 
 - 配置成自动启动
-```shell script
+```shell
 systemctl enable spring-jw-example.service
 ```
 
 - 启动服务
-```shell script
+```shell
 systemctl start spring-jw-example.service
 ```
 
@@ -426,7 +444,8 @@ test:
     - mvn $MAVEN_CLI_OPTS test
 ```
 
-为了加速maven仓库访问，在工程中配置`.m2/settings.xml`文件，并且在该文件中的仓库镜像配置阿里云maven加速，如果涉及到内网Maven访问，也可以在这里配置。
+为了加速maven仓库访问，在工程中配置`.m2/settings.xml`文件，并且在该文件中的仓库镜像配置阿里云maven加速。
+
 ```xml
 <mirror>
     <id>alimaven</id>
