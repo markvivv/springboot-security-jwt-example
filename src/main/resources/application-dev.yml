@@ -3,3 +3,4 @@ spring:
     url: jdbc:mysql://0.0.0.0:3306/database?characterEncoding=utf8&useConfigs=maxPerformance&rewriteBatchedStatements=true&useSSL=false&serverTimezone=GMT%2B8
     username: username
     password: password
+    type: com.alibaba.druid.pool.DruidDataSource

@@ -1,7 +1,11 @@
 package examples.spring.project.users;
 
 import examples.spring.project.Body;
-import examples.spring.project.security.jwt.JwtTokenProvider;
+import examples.spring.project.config.SecurityUserDetails;
+import examples.spring.project.config.jwt.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RestController
 public class AuthenticationController {
 
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -46,9 +48,12 @@ public class AuthenticationController {
         logger.debug("用户 {} 开始登录。", username);
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
 
-            String token = jwtTokenProvider.createToken(username, new ArrayList<String>());
+            SecurityUserDetails securityUserDetails = (SecurityUserDetails) authentication.getPrincipal();
+
+            String token = jwtTokenProvider.createToken(securityUserDetails);
             Map<String, Object> model = new HashMap<>();
             model.put("user_name", username);
             model.put("token", token);

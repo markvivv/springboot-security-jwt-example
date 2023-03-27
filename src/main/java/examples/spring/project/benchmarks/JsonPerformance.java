@@ -1,6 +1,7 @@
 package examples.spring.project.benchmarks;
 
 import examples.spring.project.Body;
+import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -18,7 +18,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping(value = "/benchmarks")
 public class JsonPerformance {
 
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
     @PostMapping(value="/post_dev_info")
     public ResponseEntity postDevInfo(@Valid @RequestBody Map<String, Object> param) {

@@ -1,8 +1,13 @@
-package examples.spring.project.security.jwt;
+package examples.spring.project.config.jwt;
 
+import examples.spring.project.config.InvalidJwtAuthenticationException;
+import examples.spring.project.config.SecurityUserDetails;
 import io.jsonwebtoken.*;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.convert.DurationUnit;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,9 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
@@ -25,8 +27,8 @@ public class JwtTokenProvider {
 
     private Logger logger = LogManager.getLogger();
 
-    @Resource
-    private UserDetailsService userDetailsService;
+    //@Autowired
+    //private UserDetailsService userDetailsService;
 
     @Value("${jwt.secretkey}")
     private String secretKey;
@@ -43,13 +45,14 @@ public class JwtTokenProvider {
     /**
      * 根据账号、角色信息创建token
      *
-     * @param username
-     * @param roles
+     * @param securityUserDetails
      * @return
      */
-    public String createToken(String username, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("roles", roles);
+    public String createToken(SecurityUserDetails securityUserDetails) {
+        Claims claims = Jwts.claims().setSubject(securityUserDetails.getUsername());
+        // 存储业务用各种数据，保存非涉密信息，比如用户名、昵称、所属企业等
+        claims.put("roles", securityUserDetails.getAuthorities());
+        claims.put("nickname", securityUserDetails.getNickname());
         return generateToken(claims);
     }
 
@@ -71,12 +74,22 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                // 指定签名用 SecretKey，或使用非对称加密，指定 PrivateKey 进行签名，并使用公钥加密内容.
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
+        // 方法一：每次接口请求时，在JwtTokenOncePerRequestFilter会调用本方法，每次读取数据库。也可以考虑增加缓存。
+        //UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
+        // 方法二：token有效期内，根据token解码的信息，重新生成SecurityUserDetails信息
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+
+        SecurityUserDetails userDetails = new SecurityUserDetails(
+                claims.getSubject(),
+                claims.get("nickname", String.class),
+                "", claims.get("roles", List.class),
+                true, true, true, true);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
