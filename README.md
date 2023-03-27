@@ -27,6 +27,9 @@
       private Duration validityInMs;
       ```
 - 配置.gitlab-ci.yml，启用GitLab基于Maven的自动持续集成（Auto CI）
+- 类关系图
+![SpringSecurity3 vpd](https://user-images.githubusercontent.com/447704/227861428-a478ad7c-dde9-4b5d-b30d-f147188f9722.jpg)
+
   
 ## 2. 工程目录结构说明
 ```
