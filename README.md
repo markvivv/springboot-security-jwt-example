@@ -2,7 +2,7 @@
 
 # Spring Security + JWT + Mybatis完整示例
 
-## 设计特点
+## 1. 设计特点
 - JWT和Spring Security结合进行授权验证。
 - 接口支持Pojo传参，在Pojo上使用注解进行参数校验，依赖Spring的Validation。
 - 使用统一返回的Body对象，支持返回Pojo对象或者Map封装的数据集合，Body中统一处理分页查询返回。
@@ -30,7 +30,7 @@
       ```
 - 配置.gitlab-ci.yml，启用GitLab基于Maven的自动持续集成（Auto CI）
   
-## 工程目录结构说明
+## 2. 工程目录结构说明
 ```
 spring-jwt-example/                        * 工程目录名，可以根据实际项目情况进行修改
   |- resources
@@ -44,18 +44,17 @@ spring-jwt-example/                        * 工程目录名，可以根据实�
      |- SpringJwtExampleApplication.java   * 启动类，根据项目情况进行修改
      |- examples.spring.project            * 源码包结构，根据实际项目进行重修改
         |- config                          * 框架类的各种配置
-           |- CorsConfig.java              * 跨域请求（Cross-Origin Resource Sharing）配置，已经配置成允许所有请求所有参数
-           |- WebSecurityConfig.java       * JWT安全配置，有需要排除不做登录请求过滤的uri在这里面配置
+           |- CorsConfig.java                            * 跨域请求（Cross-Origin Resource Sharing）配置，已经配置成允许所有请求所有参数
+           |- SecurityConfig.java                        * JWT安全配置，有需要排除不做登录请求过滤的uri在这里面配置
+           |- SecurityUserDetailsService.java            * 查询数据库进行登录验证
+           |- SecurityUserDetails.java                   * Security UserDetails的实现类
+           |- InvalidJwtAuthenticationException.java     * JWT验证自定义异常类
+           |- InvalidAuthenticationEntryPoint.java       * JWT登录失败时调用的类
+           |- jwt
+              |- JwtTokenOncePerRequestFilter.java       * JWT过滤器，验证每次请求的Token是否有效
+              |- JwtTokenProvider.java                   * JwtToken计算工具类
         |- exception
            |- CustomExceptionHandlerjava   * 使用@ControllerAdvice处理所有Controller抛出的异常并返回给前端，避免前端收到500错误页面
-        |- security
-           JwtUserDetailsService.java      * 查询数据库进行登录验证，每次接口请求都会访问对应的类，如果对性能有要求，可以对登录校验加缓存
-           |- jwt
-              |- InvalidJwtAuthenticationException.java * JWT验证自定义异常类
-              |- JwtAuthenticationEntryPoint.java       * JWT登录失败时调用的类
-              |- JwtSecurityConfigurer.java             * 配置AuthenticationEntryPoint和JwtTokenAuthenticationFilter的类
-              |- JwtTokenAuthenticationFilter.java      * JWT过滤器，验证每次请求的Token是否有效
-              |- JwtTokenProvider.java      * JwtToken计算工具类
         |- users
            |- mapper                        * mybatis文件夹，mybatis mapper文件必须在这里才会被自动扫描到，在application-mybatis.xml文件中配置
               |- Login.xml                  * 登录mybatis mapper文件
@@ -80,8 +79,8 @@ spring-jwt-example/                        * 工程目录名，可以根据实�
      |- pom.xml                             * pom配置。当前jwt依赖jsonwebtoken.jjwt
 ```
 
-## 接口清单
-### 登录验证（/api/authenticate）
+## 3. 接口清单
+### 3.1. 登录验证（/api/authenticate）
 
 - 请求header
 
@@ -96,7 +95,7 @@ spring-jwt-example/                        * 工程目录名，可以根据实�
 
 - 请求示例
 
-```shell script
+```shell
 curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 ```
 
@@ -129,7 +128,7 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 }
 ```
 
-### 刷新token（/api/refresh_token）
+### 3.2. 刷新token（/api/refresh_token）
 
 - 请求Header
 
@@ -154,7 +153,7 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 
   *参考登录验证接口*
 
-### 获取当前用户信息（/api/current_user）
+### 3.3. 获取当前用户信息（/api/current_user）
 通过还在有效期的token，获取当前的用户信息，如果token已经失效，接口返回http code 403。
 - 请求Header
 
@@ -207,48 +206,119 @@ curl -d "user_name=admin&password=123456" http://localhost:8080/api/authenticate
 }
 ```
 
-## 数据库表结构
-```sql
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+# 4. 测试环境数据库环境初始化
+## 4.1. docker环境拉取Mysql官方镜像
 
--- ----------------------------
--- Table structure for login_user
--- ----------------------------
-DROP TABLE IF EXISTS `login_user`;
-CREATE TABLE `login_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(50) DEFAULT NULL COMMENT '登录用户名',
-  `nick_name` varchar(200) DEFAULT NULL COMMENT '用户昵称',
-  `bcrypt_passwd` char(68) DEFAULT NULL COMMENT '加密密码',
-  `status` char(1) DEFAULT 'Y' COMMENT '用户状态\nY：正常 \nL：锁定\nD：逻辑删除',
-  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '账号创建日期',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_user_name` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='用户登录信息表';
-
--- ----------------------------
--- Records of login_user
--- ----------------------------
-BEGIN;
--- 当前默认密码是123456
-INSERT INTO `login_user` VALUES (1, 'admin', '系统管理员', '{bcrypt}$2a$10$XMj0iNiUZNf5Dec5QL4.WOVa92tSY6xcRH6SjY.LajLZvVMVxb8Vy', 'Y', '2020-03-22 00:36:54', '2020-03-22 20:20:34');
-COMMIT;
-
-SET FOREIGN_KEY_CHECKS = 1;
+```shell
+markvivv@MBP ~ % docker pull mysql
+Using default tag: latest
+'latest: Pulling from library/mysql
+ab8798141d46: Pull complete 
+75508f0dccd7: Pull complete 
+b2a1f5f86172: Pull complete 
+5ccc774632f3: Pull complete 
+df7d86490565: Pull complete 
+32480f1416f7: Pull complete 
+0b89229d2472: Pull complete 
+229bb5ff022d: Pull complete 
+a972d41dd67e: Pull complete 
+c8283d390a92: Pull complete 
+ddba158ba540: Pull complete 
+Digest: sha256:ca114710bb35b862062fd51733a7dba1ba3e93be33e4eede442b0ce15c77b718
+Status: Downloaded newer image for mysql:latest
+docker.io/library/mysql:latest
 ```
 
-## 生成密码的方法
+## 4.2. 启动Mysql
+设置root账号默认密码1@34qWer，服务器本地3306端口映射容器3306端口启动
+
+```shell
+markvivv@MBP ~ % docker run --name mysql  -e MYSQL_ROOT_PASSWORD=1@34qWer -d mysql:latest
+b210f38ea50ccd379e3d45933b89d464b0fabb5f545254ca6f461a5531bfbca9
+```
+
+## 4.3. 测试3306端口是否正常
+
+```shell
+markvivv@MBP ~ % telnet 127.0.0.1 3306
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+J
+8.0.3b+F13gG?1!b%F8-}Vcaching_sha2_password^CConnection closed by foreign host.
+markvivv@MBP ~ % 
+```
+
+## 4.4. 进入mysql正在运行容器的命令行环境
+
+```bash
+markvivv@MBP ~ % docker exec -it mysql bash
+```
+
+## 4.5. 创建数据库实例以及数据库用户
+```bash
+bash-4.4# mysql -u root -p1@34qWer
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> CREATE USER 'example'@'%' IDENTIFIED BY '1@34qWer';
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create database if not exists example DEFAULT CHARACTER SET = 'UTF8mb4';
+Query OK, 1 row affected (0.02 sec)
+
+mysql> GRANT ALL ON example.* TO 'example'@'%';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> flush privileges;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> use example
+```
+
+## 4.6. 执行数据库表初始化
+
+```shell
+mysql> CREATE TABLE `login_user` (
+    ->   `id` int(11) NOT NULL AUTO_INCREMENT,
+    ->   `user_name` varchar(50) DEFAULT NULL COMMENT '',
+    ->   `nick_name` varchar(200) DEFAULT NULL COMMENT '',
+    ->   `bcrypt_passwd` char(68) DEFAULT NULL COMMENT '',
+    ->   `status` char(1) DEFAULT 'Y' COMMENT '\nY \nL\nD',
+    ->   `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '',
+    ->   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    ->   PRIMARY KEY (`id`),
+    ->   UNIQUE KEY `idx_user_name` (`user_name`)
+    -> ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='';
+Query OK, 0 rows affected, 1 warning (0.06 sec)
+
+# 加密串对应的默认密码是123456
+mysql> INSERT INTO `login_user` VALUES (1, 'admin', '', '{bcrypt}$2a$10$XMj0iNiUZNf5Dec5QL4.WOVa92tSY6xcRH6SjY.LajLZvVMVxb8Vy', 'Y', '2020-03-22 00:36:54', '2020-03-22 20:20:34');
+Query OK, 1 row affected (0.03 sec)
+
+mysql>
+```
+
+## 4.7. 生成密码的方法
 调用`PasswordTools`可以生成密码，填入数据库即可
 
-## 示例项目部署方法
+# 5. 示例项目部署方法
 - 主目录创建config、logs两个文件夹
 - 主目录放置start.sh和stop.sh两个脚本文件，并添加可执行权限
 - config目录下放置application.properties或application*.yml和log4j2.xml文件
 - 修改log4j2.xml文件，增加日志文件输出
 
-### 示例项目启动脚本start.sh
+### 5.1. 示例项目启动脚本start.sh
 ```shell script
 #!/bin/bash
 APP_HOME=$(cd "$(dirname "$0")";pwd)
@@ -287,7 +357,7 @@ java -server -Xmx256m -XX:+UseG1GC \
 echo $! > "$APP_HOME/pid";
 ```
 
-### 示例项目停止脚本stop.sh
+### 5.2. 示例项目停止脚本stop.sh
 当前采用直接kill进程的方式，未来计划提供安全停止的方法
 ```shell script
 #!/bin/sh
@@ -301,7 +371,7 @@ while [ "$i" != "3" ]; do
 done
 ```
 
-### 安装成`systemd`服务
+### 5.3. 安装成`systemd`服务
 - 在`/etc/systemd/system`目录下配置`spring-jw-example.service`文件
 ```shell script
 [Unit]
@@ -327,7 +397,7 @@ systemctl enable spring-jw-example.service
 systemctl start spring-jw-example.service
 ```
 
-## 基于GitLab的CI
+# 6. 基于GitLab的CI
 参考[How to deploy Maven projects to Artifactory with GitLab CI/CD](https://docs.gitlab.com/ee/ci/examples/artifactory_and_gitlab/index.html)添加.gitlab-ci.yml文件，只做build，test，所以文件配置如下
 ```yaml
 image: maven:latest
@@ -366,21 +436,21 @@ test:
 </mirror>
 ```
 
-# SpringBoot tomcat 性能测试情况
+# 7. SpringBoot tomcat 性能测试情况
 
 先说结论：
 - 服务器操作系统`CentOS Linux release 7.6.1810`，仅仅调整session的openfile至10万，未做任何其他参数调整
 - 安装`Open JDK11.0.8`，Java进程启动参数`-server -Xss256k -Xms8g -Xmx8g`
 - 服务器配置：VMWare虚拟化16vCPU，32G，稳定运行在并发3000个请求/秒左右，国外有人测试不调整任何参数能够稳定在5000个并发以内
 
-## 测试命令准备
+## 7.1. 测试命令准备
 
-### 安装ab test命令
+### 7.2. 安装ab test命令
 
-```shell script
+```shell
 [root@node-kubeadm-251 ~]# yum -y install httpd-tools
 ```
-### 准备json文件
+### 7.3. 准备json文件
 
 ```json
 {
@@ -400,9 +470,9 @@ test:
 }
 ```
 
-### 调用/api/authenticate获取token后开始测试
+### 7.4. 调用/api/authenticate获取token后开始测试
 
-```shell script
+```shell
 [root@node-kubeadm-251 ~]# ab -n300000 -c200 -T application/json -H "Content-Type: application/json" -H  "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaWF0IjoxNjAwODI0NTI2LCJleHAiOjE2MDA5MTA5MjZ9.mJAB0Z6iEUdtyXBobB0GTvAjLKPCiW9lbIws68nEzZI" -p test_post.json http://127.0.0.1:8080/api/benchmarks/post_dev_info
 This is ApacheBench, Version 2.3 <$Revision: 1430300 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
