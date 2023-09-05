@@ -4,6 +4,8 @@ target/
 !**/src/main/**
 !**/src/test/**
 
+.vagrant
+
 ### STS ###
 .apt_generated
 .classpath
